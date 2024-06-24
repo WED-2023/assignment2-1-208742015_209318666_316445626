@@ -10,6 +10,8 @@ const router = new VueRouter({
   routes,
 });
 
+import BootstrapVue from 'bootstrap-vue';
+Vue.use(BootstrapVue);
 import Vuelidate from "vuelidate";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -67,7 +69,8 @@ Vue.use(VueAxios, axios);
 Vue.config.productionTip = false;
 
 const shared_data = {
-  server_domain: "http://localhost:3000",
+  // server_domain: "http://localhost:3000",
+  server_domain: "http://bahaar.cs.bgu.ac.il/",
   username: localStorage.username,
   login(username) {
     localStorage.setItem("username", username);
@@ -104,3 +107,7 @@ new Vue({
   },
   render: (h) => h(App),
 }).$mount("#app");
+const state = {
+  // server_domain: "http://localhosnode t:3000",
+  server_domain:  "http://bahaar.cs.bgu.ac.il/",
+}

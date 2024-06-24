@@ -1,18 +1,204 @@
-// src/services/recipes.js
-import recipe_full_view from "../assets/mocks/recipe_full_view.json";
 import recipe_preview from "../assets/mocks/recipe_preview.json";
 
+// Define the recipes array at the module level with distinct recipes
+let recipes = [
+  {
+    id: 716429,
+    image: "https://img.spoonacular.com/recipes/716429-556x370.jpg",
+    title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
+    readyInMinutes: 45,
+    aggregateLikes: 209,
+    vegetarian: false,
+    vegan: false,
+    glutenFree: false,
+    summary: "You can never have too many main course recipes, so give Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs a try. One serving contains <b>543 calories</b>, <b>17g of protein</b>, and <b>16g of fat</b>. For <b>$1.57 per serving</b>, this recipe <b>covers 22%</b> of your daily requirements of vitamins and minerals. This recipe serves 2. A mixture of butter, white wine, pasta, and a handful of other ingredients are all it takes to make this recipe so yummy. 209 people have tried and liked this recipe. It is brought to you by fullbellysisters.blogspot.com. From preparation to the plate, this recipe takes approximately <b>45 minutes</b>. Taking all factors into account, this recipe <b>earns a spoonacular score of 83%</b>, which is tremendous. If you like this recipe, take a look at these similar recipes: <a href=\"https://spoonacular.com/recipes/pasta-with-garlic-scallions-cauliflower-breadcrumbs-1230187\">Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs</a>, <a href=\"https://spoonacular.com/recipes/pasta-with-garlic-scallions-cauliflower-breadcrumbs-1229807\">Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs</a>, and <a href=\"https://spoonacular.com/recipes/pasta-with-garlic-scallions-cauliflower-breadcrumbs-1229669\">Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs</a>.",
+    analyzedInstructions: [],
+    instructions: "",
+    extendedIngredients: [
+      {
+        id: 1001,
+        aisle: "Milk, Eggs, Other Dairy",
+        image: "butter-sliced.jpg",
+        consistency: "SOLID",
+        name: "butter",
+        original: "1 tbsp butter",
+        amount: 1.0,
+        unit: "tbsp",
+      },
+      {
+        id: 10011135,
+        aisle: "Produce",
+        image: "cauliflower.jpg",
+        consistency: "SOLID",
+        name: "cauliflower florets",
+        original: "about 2 cups frozen cauliflower florets, thawed, cut into bite-sized pieces",
+        amount: 2.0,
+        unit: "cups",
+      },
+      {
+        id: 1038,
+        aisle: "Cheese",
+        image: "parmesan.jpg",
+        consistency: "SOLID",
+        name: "cheese",
+        original: "2 tbsp grated cheese (I used romano)",
+        amount: 2.0,
+        unit: "tbsp",
+      },
+      {
+        id: 1034053,
+        aisle: "Oil, Vinegar, Salad Dressing",
+        image: "olive-oil.jpg",
+        consistency: "LIQUID",
+        name: "extra virgin olive oil",
+        original: "1-2 tbsp extra virgin olive oil",
+        amount: 1.0,
+        unit: "tbsp",
+      },
+      {
+        id: 11215,
+        aisle: "Produce",
+        image: "garlic.png",
+        consistency: "SOLID",
+        name: "garlic",
+        original: "5-6 cloves garlic",
+        amount: 5.0,
+        unit: "cloves",
+      },
+      {
+        id: 10720420,
+        aisle: "Pasta and Rice",
+        image: "spaghetti.jpg",
+        consistency: "SOLID",
+        name: "pasta",
+        original: "6-8 ounces pasta (I used linguine)",
+        amount: 6.0,
+        unit: "ounces",
+      },
+      {
+        id: 1032009,
+        aisle: "Spices and Seasonings",
+        image: "red-pepper-flakes.jpg",
+        consistency: "SOLID",
+        name: "red pepper flakes",
+        original: "couple of pinches red pepper flakes, optional",
+        amount: 2.0,
+        unit: "pinches",
+      },
+      {
+        id: 1102047,
+        aisle: "Spices and Seasonings",
+        image: "salt-and-pepper.jpg",
+        consistency: "SOLID",
+        name: "salt and pepper",
+        original: "salt and pepper, to taste",
+        amount: 2.0,
+        unit: "servings",
+      },
+      {
+        id: 11291,
+        aisle: "Produce",
+        image: "spring-onions.jpg",
+        consistency: "SOLID",
+        name: "scallions",
+        original: "3 scallions, chopped, white and green parts separated",
+        amount: 3.0,
+        unit: "",
+      },
+      {
+        id: 14106,
+        aisle: "Alcoholic Beverages",
+        image: "white-wine.jpg",
+        consistency: "LIQUID",
+        name: "white wine",
+        original: "2-3 tbsp white wine",
+        amount: 2.0,
+        unit: "tbsp",
+      },
+      {
+        id: 99025,
+        aisle: "Pasta and Rice",
+        image: "breadcrumbs.jpg",
+        consistency: "SOLID",
+        name: "bread crumbs",
+        original: "1/4 cup whole wheat bread crumbs (I used panko)",
+        amount: 0.25,
+        unit: "cup",
+      },
+    ],
+    servings: 2,
+  },
+  {
+    id: 716430,
+    image: "https://img.spoonacular.com/recipes/716430-556x370.jpg",
+    title: "Chicken Alfredo Pasta",
+    readyInMinutes: 30,
+    aggregateLikes: 350,
+    vegetarian: false,
+    vegan: false,
+    glutenFree: false,
+    summary: "A delicious and creamy chicken alfredo pasta recipe.",
+    analyzedInstructions: [],
+    instructions: "Boil pasta. Cook chicken. Mix with alfredo sauce.",
+    extendedIngredients: [
+      {
+        id: 1001,
+        aisle: "Milk, Eggs, Other Dairy",
+        image: "butter-sliced.jpg",
+        consistency: "SOLID",
+        name: "butter",
+        original: "2 tbsp butter",
+        amount: 2.0,
+        unit: "tbsp",
+      },
+    ],
+    servings: 4,
+  },
+  {
+    id: 716431,
+    image: "https://img.spoonacular.com/recipes/716431-556x370.jpg",
+    title: "Vegan Tacos",
+    readyInMinutes: 20,
+    aggregateLikes: 500,
+    vegetarian: true,
+    vegan: true,
+    glutenFree: true,
+    summary: "A healthy and delicious vegan taco recipe.",
+    analyzedInstructions: [],
+    instructions: "Prepare vegetables. Cook with spices. Serve in tacos.",
+    extendedIngredients: [
+      {
+        id: 10011135,
+        aisle: "Produce",
+        image: "cauliflower.jpg",
+        consistency: "SOLID",
+        name: "cauliflower florets",
+        original: "1 cup cauliflower florets",
+        amount: 1.0,
+        unit: "cup",
+      },
+    ],
+    servings: 6,
+  },
+];
 
 export function mockGetRecipesPreview(amount = 1) {
-  let recipes = [];
-  for(let i = 0; i < amount; i++){
-    recipes.push(recipe_preview);
-  }
-
-  return { data: { recipes: recipes } };
+  let recipePreviews = recipes.slice(0, amount).map(recipe => ({
+    id: recipe.id,
+    title: recipe.title,
+    readyInMinutes: recipe.readyInMinutes,
+    image: recipe.image,
+    aggregateLikes: recipe.aggregateLikes,
+    extendedIngredients: recipe.extendedIngredients,
+  }));
+  return { data: { recipes: recipePreviews } };
 }
 
 export function mockGetRecipeFullDetails(recipeId) {
-    return { data: { recipe: recipe_full_view } } ;
-  }
-  
+  const recipe = recipes.find(r => r.id === recipeId);
+  return { data: { recipe } };
+}
+
+export function mockAddRecipe(newRecipe) {
+  recipes.push(newRecipe);
+}

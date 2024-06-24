@@ -4,17 +4,19 @@
       {{ title }}:
       <slot></slot>
     </h3>
-    <b-row>
-      <b-col v-for="r in recipes" :key="r.id">
-        <RecipePreview class="recipePreview" :recipe="r" />
+    <b-row v-if="sortedRecipes.length > 0">
+      <b-col v-for="r in sortedRecipes" :key="r.id || r.recipeId" style="flex-basis: 0;flex-grow: 0;max-width: 100%;padding: 40px;">
+        <RecipePreview class="recipePreview" :recipe="r.recipe || r" :id="r.id || r.recipeId" />
       </b-col>
     </b-row>
+    <div v-else>No recipes found</div>
   </b-container>
 </template>
 
 <script>
 import RecipePreview from "./RecipePreview.vue";
 import { mockGetRecipesPreview } from "../services/recipes.js";
+
 export default {
   name: "RecipePreviewList",
   components: {
@@ -24,6 +26,15 @@ export default {
     title: {
       type: String,
       required: true
+    },
+    path: {
+      type: String,
+      required: true
+    },
+    sort: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
   data() {
@@ -34,25 +45,35 @@ export default {
   mounted() {
     this.updateRecipes();
   },
+  computed: {
+    sortedRecipes() {
+      let sorted = [...this.recipes];
+      if (this.sort === "By time") {
+        sorted = sorted.sort((a, b) => a.readyInMinutes - b.readyInMinutes);
+      } else if (this.sort === "By popularity") {
+        sorted = sorted.sort((a, b) => b.aggregateLikes - a.aggregateLikes);
+      }
+      return sorted;
+    }
+  },
   methods: {
     async updateRecipes() {
       try {
-        // const response = await this.axios.get(
-        //   this.$root.store.server_domain + "/recipes/random",
-        // );
-
-        const amountToFetch = 5; // Set this to how many recipes you want to fetch
-        const response = mockGetRecipesPreview(amountToFetch);
-
-
-        console.log(response);
-        const recipes = response.data.recipes;
-        console.log(recipes);
-        this.recipes = [];
-        this.recipes.push(...recipes);
+        const response = mockGetRecipesPreview(5); // Fetch 5 recipes for example
+        let recipes = response.data.recipes;
+        this.recipes = recipes;
       } catch (error) {
         console.log(error);
       }
+    }
+  },
+  watch: {
+    path() {
+      this.updateRecipes();
+    },
+    sort() {
+      // Trigger recomputation of sorted recipes when sort changes
+      this.recipes = [...this.recipes]; // Trigger reactivity by replacing the array reference
     }
   }
 };
