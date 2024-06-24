@@ -46,9 +46,11 @@ To set up the project locally, follow these steps:
    git clone https://github.com/yourusername/tasty-recipes.git
    cd tasty-recipes
 2. **Install dependencies:**
-    npm install
-3. **Access the application:**
-Open your browser and navigate to http://<your_machine_ip>:8080.
+   ```sh
+   npm install
+4. **Access the application:**
+  ```sh
+  Open your browser and navigate to http://bahaar.cs.bgu.ac.il/8080.
 
 🚀 Usage
 Search Recipes: Use the search bar and filters to find recipes.
