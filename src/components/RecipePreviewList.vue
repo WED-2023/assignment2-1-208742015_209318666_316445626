@@ -15,8 +15,7 @@
 
 <script>
 import RecipePreview from "./RecipePreview.vue";
-import { mockGetRecipesPreview } from "../services/recipes.js";
-
+  `   `
 export default {
   name: "RecipePreviewList",
   components: {
@@ -59,9 +58,23 @@ export default {
   methods: {
     async updateRecipes() {
       try {
-        const response = mockGetRecipesPreview(5); // Fetch 5 recipes for example
-        let recipes = response.data.recipes;
+        const response = await this.axios.get(
+      
+      // "http://BahaaR.cs.bgu.ac.il/"+ this.path,
+      
+      "http://localhost:80/"+ this.path, {
+          withCredentials: true  // Send session cookies with the request
+        }
+      
+    );
+
+        if(this.path=="recipes/random"){
+          var recipes = response.data.recipes;
+        }else{
+          var recipes = response.data.map(item => item.recipes[0]);  
+        }
         this.recipes = recipes;
+
       } catch (error) {
         console.log(error);
       }

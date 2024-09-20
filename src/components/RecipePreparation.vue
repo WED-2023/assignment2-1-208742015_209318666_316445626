@@ -58,10 +58,13 @@
       }
     },
     async created() {
-      const apiKey = '92aaadff300d44c5a15eefa56975fb95';  // Replace 'YOUR_API_KEY' with your actual Spoonacular API key
+      const apiKey = '5b1b45bf0c3d4b746e7bbc126f573a5d4f05e37b';  // Replace 'YOUR_API_KEY' with your actual Spoonacular API key
       const recipeId = 324694;  // The recipe ID for which you want to fetch data
       try {
-        const response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?apiKey=${apiKey}`);
+       // const response = await axios.get(`https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions?apiKey=${apiKey}`);
+       const response = await axios.get(`http://localhost:80/api/recipes/${recipeId}`);
+      // const response = await axios.get(`http://loclalhost:3000/api/recipes/${recipeId}/analyzedInstructions?apiKey=${apiKey}`);
+
         if (response.data && response.data.length > 0) {
           const instructionsData = response.data[0].steps;
           const steps = instructionsData.map((step, index) => ({
@@ -70,13 +73,14 @@
             ingredients: step.ingredients.map(ingredient => ({
               id: ingredient.id,
               name: ingredient.name,
-              amount: ingredient.amount // Assuming API provides an amount here
+              amount: ingredient.amount || 0 // Assuming API provides an amount here
             })),
             index
           }));
           this.recipe.steps = steps;
           this.recipe.title = 'Loaded from Spoonacular'; // Adjust based on actual data if available
-          this.recipe.image = 'path/to/default/image.jpg'; // Adjust based on actual data if available
+          this.recipe.image = instructionsData[0].image || 'default-image-path.jpg';
+
   
           // Flatten ingredients array from all steps
           this.recipe.ingredients = steps.flatMap(step => step.ingredients);
@@ -109,12 +113,12 @@
   
   <style scoped>
   .recipe-preparation {
-    border: 1px solid #ccc;
-    padding: 20px;
-    margin-top: 20px;
-    background-color: #f8f8f8;
-    border-radius: 8px;
-  }
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   transition: transform 0.3s ease;
+}
+.recipe-preparation:hover {
+   transform: scale(1.02);
+}
   
   .recipe-preparation h1, 
   .recipe-preparation h2 {

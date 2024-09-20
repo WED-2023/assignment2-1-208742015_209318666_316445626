@@ -1,0 +1,197 @@
+openapi: 3.0.0
+info:
+  title: Tasty Recipes API
+  description: API for Tasty Recipes website allowing users to search, view, and manage recipes.
+  version: 1.0.0
+servers:
+  - url: http://BahaaR.cs.bgu.ac.il
+    description: Development server
+
+tags:
+  - name: Recipes
+    description: Endpoints related to recipes
+  - name: Users
+    description: Endpoints related to user operations
+
+paths:
+  /recipes:
+    get:
+      tags:
+        - Recipes
+      summary: Get all recipes
+      description: Retrieve a list of all available recipes.
+      operationId: getRecipes
+      responses:
+        '200':
+          description: A list of recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+
+  /recipes/{recipeId}:
+    get:
+      tags:
+        - Recipes
+      summary: Get recipe by ID
+      description: Retrieve a single recipe by its ID.
+      operationId: getRecipeById
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          description: ID of the recipe to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '404':
+          description: Recipe not found
+
+  /users/register:
+    post:
+      tags:
+        - Users
+      summary: Register a new user
+      description: Create a new user account.
+      operationId: registerUser
+      requestBody:
+        description: User details for registration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Invalid input
+
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: User login
+      description: Authenticate a user and return a token.
+      operationId: loginUser
+      requestBody:
+        description: User credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Invalid credentials
+
+components:
+  schemas:
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The recipe ID
+        title:
+          type: string
+          description: The title of the recipe
+        image:
+          type: string
+          description: URL to the recipe image
+        readyInMinutes:
+          type: integer
+          description: Time required to prepare the recipe
+        aggregateLikes:
+          type: integer
+          description: Number of likes for the recipe
+        vegetarian:
+          type: boolean
+          description: Whether the recipe is vegetarian
+        vegan:
+          type: boolean
+          description: Whether the recipe is vegan
+        glutenFree:
+          type: boolean
+          description: Whether the recipe is gluten-free
+        summary:
+          type: string
+          description: A brief summary of the recipe
+        instructions:
+          type: string
+          description: Instructions for preparing the recipe
+        extendedIngredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        servings:
+          type: integer
+          description: Number of servings the recipe makes
+
+    Ingredient:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ingredient ID
+        name:
+          type: string
+          description: The name of the ingredient
+        amount:
+          type: number
+          description: The amount of the ingredient
+        unit:
+          type: string
+          description: The unit of the ingredient
+
+    NewUser:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          description: The user's username
+        password:
+          type: string
+          description: The user's password
+        email:
+          type: string
+          description: The user's email address
+        firstName:
+          type: string
+          description: The user's first name
+        lastName:
+          type: string
+          description: The user's last name
+
+    LoginUser:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          description: The user's username
+        password:
+          type: string
+          description: The user's password

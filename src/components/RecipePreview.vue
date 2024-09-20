@@ -53,13 +53,13 @@ export default {
         if (starIconElement.classList.contains('glyphicon-star-empty')) {
           starIconElement.classList.remove('glyphicon-star-empty');
           starIconElement.classList.add('glyphicon-star');
-          await this.axios.post("http://bahaar.cs.bgu.ac.il//users/favorites", {
+          await this.axios.post("http://localhost:80/users/favorites", {
             recipeId: this.recipe.id,
           });
         } else {
           starIconElement.classList.remove('glyphicon-star');
           starIconElement.classList.add('glyphicon-star-empty');
-          await this.axios.delete("http://bahaar.cs.bgu.ac.il//users/favorites", {
+          await this.axios.delete("http://localhost:80/users/favorites", {
             data: { recipeId: this.recipe.id },
           });
         }

@@ -1,0 +1,302 @@
+openapi: 3.0.0
+info:
+  title: Tasty Recipes API
+  description: "API for Tasty Recipes website allowing users to search, view, and manage recipes."
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/RAYANB/swaggerAPI/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: http://BahaaR.cs.bgu.ac.il
+  description: Development server
+tags:
+- name: Recipes
+  description: Endpoints related to recipes
+- name: Users
+  description: Endpoints related to user operations
+paths:
+  /recipes:
+    get:
+      tags:
+      - Recipes
+      summary: Get all recipes
+      description: Retrieve a list of all available recipes.
+      operationId: getRecipes
+      responses:
+        "200":
+          description: A list of recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+              example:
+              - id: "1"
+                title: Spaghetti Carbonara
+                image: http://example.com/images/spaghetti.jpg
+                readyInMinutes: 30
+                aggregateLikes: 100
+                vegetarian: false
+                vegan: false
+                glutenFree: false
+                summary: A classic Italian pasta dish
+                instructions: Cook pasta. Fry pancetta. Mix with eggs and cheese.
+                extendedIngredients:
+                - id: 1
+                  name: Spaghetti
+                  amount: 200
+                  unit: g
+              - id: "2"
+                title: Vegetable Stir Fry
+                image: http://example.com/images/vegetable_stir_fry.jpg
+                readyInMinutes: 20
+                aggregateLikes: 150
+                vegetarian: true
+                vegan: true
+                glutenFree: true
+                summary: A quick and healthy vegetable stir fry
+                instructions: Chop vegetables. Stir fry with soy sauce.
+                extendedIngredients:
+                - id: 2
+                  name: Carrot
+                  amount: 100
+                  unit: g
+  /recipes/{recipeId}:
+    get:
+      tags:
+      - Recipes
+      summary: Get recipe by ID
+      description: Retrieve a single recipe by its ID.
+      operationId: getRecipeById
+      parameters:
+      - name: recipeId
+        in: path
+        description: ID of the recipe to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: "1"
+      responses:
+        "200":
+          description: A single recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+              example:
+                id: "1"
+                title: Spaghetti Carbonara
+                image: http://example.com/images/spaghetti.jpg
+                readyInMinutes: 30
+                aggregateLikes: 100
+                vegetarian: false
+                vegan: false
+                glutenFree: false
+                summary: A classic Italian pasta dish
+                instructions: Cook pasta. Fry pancetta. Mix with eggs and cheese.
+                extendedIngredients:
+                - id: 1
+                  name: Spaghetti
+                  amount: 200
+                  unit: g
+        "404":
+          description: Recipe not found
+          content:
+            application/json:
+              example:
+                message: Recipe not found
+  /users/register:
+    post:
+      tags:
+      - Users
+      summary: Register a new user
+      description: Create a new user account.
+      operationId: registerUser
+      requestBody:
+        description: User details for registration
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+            example:
+              username: newuser
+              password: SecureP@ssw0rd
+              email: newuser@example.com
+              firstName: John
+              lastName: Doe
+        required: true
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                id: "123"
+                username: newuser
+                email: newuser@example.com
+                firstName: John
+                lastName: Doe
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              example:
+                message: Invalid user data
+  /users/login:
+    post:
+      tags:
+      - Users
+      summary: User login
+      description: Authenticate a user and return a token.
+      operationId: loginUser
+      requestBody:
+        description: User credentials
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+            example:
+              username: existinguser
+              password: password123
+        required: true
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+              example:
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              example:
+                message: Invalid username or password
+components:
+  schemas:
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the recipe
+        title:
+          type: string
+          description: The title of the recipe
+        image:
+          type: string
+          description: URL to the recipe image
+        readyInMinutes:
+          type: integer
+          description: Time required to prepare the recipe in minutes
+        aggregateLikes:
+          type: integer
+          description: Number of likes for the recipe
+        vegetarian:
+          type: boolean
+          description: Whether the recipe is vegetarian
+        vegan:
+          type: boolean
+          description: Whether the recipe is vegan
+        glutenFree:
+          type: boolean
+          description: Whether the recipe is gluten-free
+        summary:
+          type: string
+          description: A brief summary of the recipe
+        instructions:
+          type: string
+          description: Instructions for preparing the recipe
+        extendedIngredients:
+          type: array
+          description: List of ingredients required for the recipe
+          items:
+            $ref: '#/components/schemas/Ingredient'
+        servings:
+          type: integer
+          description: Number of servings the recipe makes
+      description: A recipe from the Tasty Recipes API
+    Ingredient:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the ingredient
+        name:
+          type: string
+          description: The name of the ingredient
+        amount:
+          type: number
+          description: The amount of the ingredient
+        unit:
+          type: string
+          description: The unit of the ingredient amount
+      description: An ingredient used in a recipe
+    NewUser:
+      required:
+      - email
+      - firstName
+      - lastName
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          description: The user's unique username
+        password:
+          type: string
+          description: The user's password
+        email:
+          type: string
+          description: The user's email address
+        firstName:
+          type: string
+          description: The user's first name
+        lastName:
+          type: string
+          description: The user's last name
+      description: Schema for creating a new user
+    LoginUser:
+      required:
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+          description: The user's unique username
+        password:
+          type: string
+          description: The user's password
+      description: Schema for user login
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The user's unique identifier
+        username:
+          type: string
+          description: The user's unique username
+        email:
+          type: string
+          description: The user's email address
+        firstName:
+          type: string
+          description: The user's first name
+        lastName:
+          type: string
+          description: The user's last name
+      description: Schema for a registered user
+    inline_response_200:
+      type: object
+      properties:
+        token:
+          type: string

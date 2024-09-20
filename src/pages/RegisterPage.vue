@@ -252,15 +252,21 @@ export default {
     async Register() {
       try {
         const response = await this.axios.post(
-          "http://bahaar.cs.bgu.ac.il/Register",
+          // "http://BahaaR.cs.bgu.ac.il/Register",
+          "http://localhost:80/register",
           {
             username: this.form.username,
-            password: this.form.password
+            password: this.form.password,
+            firstname: this.form.firstName,
+            lastname: this.form.lastName,
+            email: this.form.email,
+            country: this.form.country,
+            password: this.form.password,
           }
         );
         this.$router.push("/login");
       } catch (err) {
-        this.form.submitError = err.response.data.message;
+        // this.form.submitError = err.response.data.message;
       }
     },
     onRegister() {

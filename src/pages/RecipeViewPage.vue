@@ -1,6 +1,12 @@
 <template>
   <div class="container">
-    <div v-if="recipe">
+    <!-- Show loader while the recipe is being fetched -->
+    <div v-if="!recipe">
+      Loading...
+    </div>
+
+    <!-- Show recipe details once the recipe is loaded -->
+    <div v-else>
       <div class="recipe-header mt-3 mb-4">
         <h1>{{ recipe.title }}</h1>
         <img :src="recipe.image" class="center" />
@@ -25,7 +31,7 @@
             <div class="inst">
               Instructions:
               <ol>
-                <li v-for="(step, index) in recipe.instructions.split('.')" :key="index">
+                <li v-for="(step, index) in (recipe.instructions ? recipe.instructions.split('.') : [])" :key="index">
                   {{ step.trim() }}
                 </li>
               </ol>
@@ -41,53 +47,52 @@
         </div>
       </div>
     </div>
-    <div v-else>
-      Loading...
-    </div>
   </div>
 </template>
 
 <script>
-import { mockGetRecipeFullDetails } from "@/services/recipes";
-
 export default {
   data() {
     return {
-      recipe: null,
+      recipe: null, // This will hold the single recipe data
       servings: 2,
       originalServings: 2,
       progress: 0,
     };
   },
   async created() {
-    try {
-      const response = mockGetRecipeFullDetails(this.$route.params.recipeId);
-      const data = response.data.recipe;
-
-      if (!data || !data.extendedIngredients || !Array.isArray(data.extendedIngredients)) {
-        throw new Error("Invalid data structure: 'extendedIngredients' is missing or not an array");
-      }
-
-      this.recipe = {
-        ...data,
-        ingredients: data.extendedIngredients.map(ingredient => ({
-          id: ingredient.id,
-          name: ingredient.name,
-          amount: ingredient.amount,
-          unit: ingredient.unit
-        })),
-        instructions: data.instructions || "",
-        servings: data.servings
-      };
-
-      this.originalServings = data.servings;
-      this.updateIngredients();
-    } catch (error) {
-      console.error('Error fetching recipe data:', error.message);
-    }
+    // Fetch the recipe when the component is created
+    this.updateRecipe();
   },
   methods: {
+    async updateRecipe() {
+      try {
+        // Get recipe ID from the route parameters
+        const recipeId = this.$route.params.recipeId;
+
+        // Fetch the recipe from the backend
+        const response = await this.axios.get(`http://localhost:80/recipes/${recipeId}`);
+        
+        // Log response to inspect data
+        console.log(response.data);
+
+        // Set the recipe data
+        this.recipe = response.data;
+
+        // Store the original number of servings
+        this.originalServings = this.recipe.servings;
+
+        // Update ingredients based on servings
+        this.markRecipeAsSeen(recipeId);
+        this.updateIngredients();
+        console.log(recipeId);
+        
+      } catch (error) {
+        console.error('Error fetching recipe:', error.message);
+      }
+    },
     updateIngredients() {
+      // Adjust ingredient amounts based on the number of servings
       if (this.recipe && this.recipe.extendedIngredients) {
         this.recipe.extendedIngredients.forEach(ingredient => {
           const amount = parseFloat(ingredient.amount);
@@ -97,23 +102,25 @@ export default {
         });
       }
     },
-    updateProgress() {
-      if (this.recipe && this.recipe.instructions) {
-        const completedSteps = this.recipe.instructions.split('.').filter(step => step.trim().length > 0).length;
-        const totalSteps = this.recipe.instructions.split('.').length;
-        this.progress = Math.round((completedSteps / totalSteps) * 100);
+    async markRecipeAsSeen(recipeId) {
+      try {
+        // Send POST request to mark the recipe as seen
+        await this.axios.post('/lastSeen', {
+          recipeId: recipeId
+        }, {
+          withCredentials: true  // Ensure cookies (including session cookies) are sent
+        });
+        console.log(`Recipe ${recipeId} marked as seen.`);
+      } catch (error) {
+        console.error('Error marking recipe as seen:', error);
       }
-    }
-  },
-  watch: {
-    servings() {
-      this.updateIngredients();
     }
   }
 };
 </script>
 
 <style scoped>
+/* Add styles for your recipe view */
 .container {
   padding: 20px;
   background-color: #f8f8f8;

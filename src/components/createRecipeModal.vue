@@ -43,8 +43,6 @@
 </template>
 
 <script>
-import { mockAddRecipe } from "../services/recipes.js";
-
 export default {
   data() {
     return {
@@ -62,15 +60,27 @@ export default {
     };
   },
   methods: {
-    add() {
+    async add() {
       try {
-        const newRecipe = {
-          ...this.recipe,
-          id: Date.now() // Generate a unique ID based on the current timestamp
-        };
+        alert(`Vegeterian: ${this.recipe.vegeterian}\nVegan: ${this.recipe.vegan}\nGluten: ${this.recipe.gluten}`);
+        const timeValue = Number(this.recipe.time);
+        const response = await this.axios.post(
+          // "BahaaR.cs.bgu.ac.il/users/Recipes",
+          // "http://BahaaR.cs.bgu.ac.il/users/Recipes",
 
-        mockAddRecipe(newRecipe); // Add the new recipe to the mock storage
-
+          "localhost:80/user/Recipes",
+          {
+            name: this.recipe.name,
+            image:this.recipe.image,
+            vegeterian: this.recipe.vegeterian === "true" ? 1 : 0,
+            vegan: this.recipe.vegan === "true" ? 1 : 0,
+            gluten: this.recipe.gluten === "true" ? 1 : 0,
+            numOfPortions: this.recipe.numOfPortions,
+            ingridiants: this.recipe.ingridiants,
+            instructions: this.recipe.instructions,
+            time: timeValue
+          }
+        );
         // Create alert that recipe was added successfully
         alert("Recipe added successfully!");
         this.$emit("formSubmitted");

@@ -7,12 +7,7 @@
         <div class="blurred-content">
           <div class="recipe-list-container">
             <RecipePreviewList ref="RecipePreviewList" title="Explore these Recipes" class="recipe-list" path="recipes/random" />
-            <RecipePreviewList
-              title="Last Viewed Recipes"
-              path="users/lastWatched"
-              :class="{
-                'recipe-list': true,
-                'blur': !$root.store.username,
+            <RecipePreviewList ref="RecipePreviewList" title="Last Viewed Recipes" path="users/lastSeen" :class="{  'recipe-list': true,'blur': !$root.store.username,  center: true
               }"
               disabled
             />

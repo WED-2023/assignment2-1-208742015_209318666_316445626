@@ -65,12 +65,13 @@ axios.interceptors.response.use(
 );
 
 Vue.use(VueAxios, axios);
+axios.defaults.baseURL = 'http://localhost:80';
 
 Vue.config.productionTip = false;
 
 const shared_data = {
-  // server_domain: "http://localhost:3000",
-  server_domain: "http://bahaar.cs.bgu.ac.il/",
+  server_domain: "http://localhost:80/Login",
+  // server_domain: "BahaaR.cs.bgu.ac.il",
   username: localStorage.username,
   login(username) {
     localStorage.setItem("username", username);
@@ -108,6 +109,6 @@ new Vue({
   render: (h) => h(App),
 }).$mount("#app");
 const state = {
-  // server_domain: "http://localhosnode t:3000",
-  server_domain:  "http://bahaar.cs.bgu.ac.il/",
+  server_domain: "localhost",
+  // server_domain:  "BahaaR.cs.bgu.ac.il",
 }

@@ -66,6 +66,7 @@
 <script>
 import RecipePreviewList from '../components/RecipePreviewList.vue'; 
 import { cuisinesOptions, dietOptions, intolerancesOtions } from '../assets/search-filter.js';
+import axios from 'axios';
 
 export default {
   components: {
@@ -89,7 +90,7 @@ export default {
     };
   },
   methods: {
-    onSearch() {
+    async onSearch() {
       if (this.input) {
         this.show = true;
       }
@@ -106,6 +107,18 @@ export default {
         .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
         .join("&");
       this.uri = `recipes/search?${queryString}`;
+
+      // Make an Axios request
+      try {
+            const response = await axios.get(this.uri, {
+                withCredentials: true // if you're using session cookies
+            });
+            console.log("Search Results:", response.data);  // Inspect response from backend
+            // Do something with the data
+        } catch (error) {
+            console.error("Error fetching search results:", error);
+        }
+
     }
   }
 };

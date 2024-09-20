@@ -47,13 +47,24 @@ export default {
     };
   },
   methods: {
-    Logout() {
+    async Logout() {
       this.$root.store.logout();
       this.$root.toast("Logout", "User logged out successfully", "success");
+      try{
+        await this.$axios.post('http://localhost:80/Logout', {}, {
+          withCredentials: true  // Ensure session cookies are sent
+        });
+        this.$root.store.logout();
+        this.$root.toast("Logout", "User logged out successfully", "success");
 
-      this.$router.push("/").catch(() => {
-        this.$forceUpdate();
-      });
+        this.$router.push("/").catch(() => {
+          this.$forceUpdate();
+        });
+      }
+      catch(error) {
+        console.error('Logout failed:', error);
+        this.$root.toast("Logout", "Logout failed", "error");
+      }
     },
     closeModal() {
       this.showModal = false;
