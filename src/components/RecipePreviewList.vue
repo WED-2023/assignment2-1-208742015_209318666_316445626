@@ -57,37 +57,21 @@ export default {
   },
   methods: {
     async updateRecipes() {
+      this.loading = true;
       try {
-        const response = await this.axios.get(
-      
-      // "http://BahaaR.cs.bgu.ac.il/"+ this.path,
-      
-      "http://localhost:80/"+ this.path, {
-          withCredentials: true  // Send session cookies with the request
-        }
-      
-    );
-
-        if(this.path=="recipes/random"){
-          var recipes = response.data.recipes;
-        }else{
-          var recipes = response.data.map(item => item.recipes[0]);  
-        }
-        this.recipes = recipes;
-
+        const response = await this.axios.get(`http://localhost:80/${this.path}`, { withCredentials: true });
+        this.recipes = this.path === "recipes/random" ? response.data.recipes : response.data.map(item => item.recipes[0]);
+        this.loading = false;
       } catch (error) {
-        console.log(error);
+        this.loading = false;
+        console.error('Error fetching recipes:', error);
+        this.recipes = []; // Clear recipes on error to avoid displaying stale data
       }
     }
   },
   watch: {
-    path() {
-      this.updateRecipes();
-    },
-    sort() {
-      // Trigger recomputation of sorted recipes when sort changes
-      this.recipes = [...this.recipes]; // Trigger reactivity by replacing the array reference
-    }
+    path: 'updateRecipes',
+    sort: 'updateRecipes'
   }
 };
 </script>

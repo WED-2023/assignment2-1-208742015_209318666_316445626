@@ -68,7 +68,7 @@ export default {
           // "BahaaR.cs.bgu.ac.il/users/Recipes",
           // "http://BahaaR.cs.bgu.ac.il/users/Recipes",
 
-          "localhost:80/user/Recipes",
+          "http://localhost:80/user/users/addRecipe",
           {
             name: this.recipe.name,
             image:this.recipe.image,

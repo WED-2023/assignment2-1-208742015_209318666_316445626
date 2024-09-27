@@ -10,6 +10,9 @@
       <div class="recipe-header mt-3 mb-4">
         <h1>{{ recipe.title }}</h1>
         <img :src="recipe.image" class="center" />
+        <svg class="star-icon" :class="{ 'liked': recipe.isLiked }" @click="toggleLike(recipe)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2, 19 21, 2 8, 22 8, 5 21"></polygon>
+        </svg>
       </div>
       <div class="recipe-body">
         <div class="wrapper">
@@ -105,16 +108,43 @@ export default {
     async markRecipeAsSeen(recipeId) {
       try {
         // Send POST request to mark the recipe as seen
-        await this.axios.post('/lastSeen', {
+        await this.axios.post('http://localhost:80/users/lastSeen', {
           recipeId: recipeId
         }, {
-          withCredentials: true  // Ensure cookies (including session cookies) are sent
+          withCredentials: true  
         });
         console.log(`Recipe ${recipeId} marked as seen.`);
       } catch (error) {
         console.error('Error marking recipe as seen:', error);
       }
+    },
+
+    toggleLike() {
+    this.isLiked = !this.isLiked; // Toggle the liked state
+
+    if (this.isLiked) {
+      this.sendLike();
+    } else {
+      this.sendUnlike(); // Optionally handle unlike case
     }
+  },
+
+    async sendLike() {
+    try {
+      const recipeId = this.$route.params.recipeId;
+
+      await this.axios.post('http://localhost:80/users/favorites', {
+        recipeId: recipeId
+      }, {
+        withCredentials: true
+      });
+
+      console.log(`Recipe ${recipeId} liked.`);
+      // Optionally update the UI to reflect the like
+    } catch (error) {
+      console.error('Error sending like:', error.message);
+    }
+  },
   }
 };
 </script>
@@ -137,6 +167,19 @@ export default {
 .wrapped {
   width: 75%;
 }
+.star-icon {
+  cursor: pointer;
+  width: 36px; /* Larger size */
+  height: 36px;
+  fill: #ccc; /* Default unliked state */
+  transition: fill 0.3s, transform 0.3s;
+}
+
+.star-icon:hover, .star-icon.liked {
+  fill: #ffcc00; /* Gold color when hovered or liked */
+  transform: scale(1.5); /* Magnifying effect */
+}
+
 .center {
   display: block;
   margin-left: auto;

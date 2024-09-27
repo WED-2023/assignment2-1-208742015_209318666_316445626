@@ -21,7 +21,7 @@
             </div>
           </div>
           <div>
-            <b-button @click="showModal=true">New Recipe</b-button>
+            <b-button @click="toggleModal">New Recipe</b-button>
             <b-modal v-model="showModal">
               <createRecipeModal @formSubmitted="closeModal"></createRecipeModal>
             </b-modal>
@@ -60,6 +60,9 @@ export default {
         this.$router.push("/").catch(() => {
           this.$forceUpdate();
         });
+        
+
+        
       }
       catch(error) {
         console.error('Logout failed:', error);
@@ -68,6 +71,14 @@ export default {
     },
     closeModal() {
       this.showModal = false;
+    },
+    toggleModal() {
+      this.showModal = true;
+      console.log("Modal should show now", this.showModal);
+    },
+    closeModal() {
+      this.showModal = false;
+      console.log("Modal should close now");
     }
   }
 };
